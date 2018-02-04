@@ -14,21 +14,21 @@ canvas.scale(30, 30);
 let game = {
     board: getBoardMatrix(12, 19),
     dropCounter : 0,
-    dropInterval : 1000,
+    gears: {
+      easy: {speed: 1000, maxScore: 1000, display: 'lvl: 1'},
+      medium: {speed: 500, maxScore: 2200, display: 'lvl: 2'},
+      hard: {speed: 300, maxScore: 3500, display: 'lvl: 3'},
+      nightmare: {speed: 100, maxScore: 7000, display: 'lvl: 4'},
+      hell: {speed: 50, maxScore: null, display: 'lvl: 5'},
+    },
+    currentPieceMatrix: null,
     isPaused: false,
     lastTime : 0,
-    matrix: null,
-    nextLetterMatrix: null,
+    previewNextLetterMatrix: null,
     pos: {x: 0, y: 0},
     requestAF: null,
     score: 0,
-    speed: {
-      easy: 1,
-      medium: 1.2,
-      hard: 1.5,
-      nightmare: 1.7,
-      hell: 2
-    },
+    speed : 1000,
     user: {
       name: undefined,
       score: undefined

@@ -2,43 +2,44 @@ import {piecesMatrix, piecesColors, game} from './setup.js'
 import {init} from './init.js';
 import {score, updateScore} from './score.js';
 
+let pieceMatrix, nextPiecePreview;
+
 nextPiece();
 
 document.addEventListener('keydown', event => {
     switch(event.keyCode){
-      case 32 : event.preventDefault(); nextPiece(); break;
+      case 32 : event.preventDefault(); game.isPaused = false; togglePause(); game.currentPieceMatrix = game.previewNextLetterMatrix; generatePreviewNextLetterMatrix(); nextPiece(); break;
       case 37 : event.preventDefault(); movePiece(-1); break;
       case 39 : event.preventDefault(); movePiece(1); break;
       case 40 : event.preventDefault(); dropPiece(); break;
-      case 80 : event.preventDefault(); togglePause(); break; // p
+      case 80 : event.preventDefault(); game.isPaused = !game.isPaused; togglePause(); break; // p
       case 38 : event.preventDefault(); rotateEvent(-1); break; // up
       case 83 : event.preventDefault(); toggleMusicPlayer(); break; // s
     }
 });
 
-function generateRandomLetter(){
+function generateRandomLetterMatrix(){
   let pieceMatrix,
       letters = 'IJLOSTZ',
-      randomLetter = letters[letters.length * Math.random() | 0];
+      index = letters.length * Math.random() | 0,
+      randomLetter = letters[index];
 
-  return piecesMatrix[randomLetter];
+  return {letterIndex: index, matrix: piecesMatrix[randomLetter]};
 }
 
-function generateNextLetter(){
-  game.nextLetterMatrix = generateRandomLetter();
+function generatePreviewNextLetterMatrix(){
+  nextPiecePreview = generateRandomLetterMatrix();
+  game.previewNextLetterMatrix = nextPiecePreview.matrix;
+  document.getElementById('nextPiece').className = 'elem'+nextPiecePreview.letterIndex;
 }
 
 function nextPiece() {
-  game.matrix = generateRandomLetter();
-  let pieceMatrix = game.matrix;
-
-  if(game.nextLetterMatrix!==null){
-    pieceMatrix = game.nextLetterMatrix;
-  }
+  game.currentPieceMatrix = game.currentPieceMatrix || generateRandomLetterMatrix().matrix;
+  pieceMatrix = game.currentPieceMatrix;
 
     game.pos.y = 0;
     game.pos.x = (game.board[0].length / 2 | 0) -
-                   (game.matrix[0].length / 2 | 0);
+                   (pieceMatrix[0].length / 2 | 0);
     if (hasCollided()) {
         game.board.forEach(row => row.fill(0));
         game.score = 0;
@@ -51,6 +52,8 @@ function dropPiece() {
     if (hasCollided()) {
         game.pos.y--;
         storePiecesInBoardMatrix();
+        game.currentPieceMatrix = game.previewNextLetterMatrix;
+        generatePreviewNextLetterMatrix();
         nextPiece();
         score();
         updateScore();
@@ -59,9 +62,9 @@ function dropPiece() {
 }
 
 function hasCollided() {
-    for (let y = 0; y < game.matrix.length; ++y) {
-        for (let x = 0; x < game.matrix[y].length; ++x) {
-            if (game.matrix[y][x] !== 0 &&
+    for (let y = 0; y < pieceMatrix.length; ++y) {
+        for (let x = 0; x < pieceMatrix[y].length; ++x) {
+            if (pieceMatrix[y][x] !== 0 &&
                (game.board[y + game.pos.y] &&
                 game.board[y + game.pos.y][x + game.pos.x]) !== 0) {
                 return true;
@@ -79,7 +82,7 @@ function movePiece(offset) {
 }
 
 function storePiecesInBoardMatrix() {
-    game.matrix.forEach((row, y) => {
+    game.currentPieceMatrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
                 game.board[y + game.pos.y][x + game.pos.x] = value;
@@ -91,12 +94,12 @@ function storePiecesInBoardMatrix() {
 function rotateEvent(direction) {
     const pos = game.pos.x;
     let offset = 1;
-    rotatePiece(game.matrix, direction);
+    rotatePiece(game.currentPieceMatrix, direction);
     while (hasCollided()) {
         game.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > game.matrix[0].length) {
-            rotatePiece(game.matrix, -direction);
+        if (offset > game.currentPieceMatrix[0].length) {
+            rotatePiece(game.currentPieceMatrix, -direction);
             game.pos.x = pos;
             return;
         }
@@ -113,7 +116,6 @@ function toggleMusicPlayer(){
 }
 
 function togglePause(){
-  game.isPaused = !game.isPaused;
   if(game.isPaused) {
     cancelAnimationFrame(game.requestAF);
     game.requestAF = null;
@@ -144,4 +146,4 @@ function rotatePiece(matrix, dir) {
     }
 }
 
-export {nextPiece, dropPiece, generateNextLetter}
+export {nextPiece, dropPiece, generatePreviewNextLetterMatrix}

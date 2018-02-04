@@ -1,19 +1,21 @@
 import {piecesMatrix, piecesColors, game, canvas} from './setup.js'
-import {dropPiece} from './events.js';
+import {dropPiece, generatePreviewNextLetterMatrix} from './events.js';
+
+generatePreviewNextLetterMatrix();
 
 function draw() {
     canvas.context.fillStyle = '#000';
     canvas.context.fillRect(0, 0, canvas.restraints.width, canvas.restraints.height);
 
     paintPieces(game.board, {x: 0, y: 0});
-    paintPieces(game.matrix, game.pos);
+    paintPieces(game.currentPieceMatrix, game.pos);
 }
 
 function init(time = 0) {
   let deltaTime = time - game.lastTime;
 
     game.dropCounter += deltaTime;
-    if (game.dropCounter > game.dropInterval) {
+    if (game.dropCounter > game.speed) {
         dropPiece();
     }
 
