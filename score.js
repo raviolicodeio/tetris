@@ -6,10 +6,10 @@ updateScore();
 
 function score() {
     let rowCount = 1;
-    bookmark: for (let y = game.board.length -1; y > 0; --y) {
+    outer: for (let y = game.board.length -1; y > 0; --y) {
         for (let x = 0; x < game.board[y].length; ++x) {
             if (game.board[y][x] === 0) {
-                continue bookmark;
+                continue outer;
             }
         }
 
