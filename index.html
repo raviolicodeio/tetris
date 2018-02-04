@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>Tetris</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+    <style>
+    body{background:#19002e;color:#fff;}
+    #tetris{}
+    canvas{border:solid 1rem #fff;height:90%;position:relative;top:-90px;left:0}
+    #next{float:left;width:120px;height:175px;background:#000;padding:10px}
+    #score{font-family:Arial;font-size:3rem;text-align:center;width:100px;height:50px;background:purple;padding:20px}
+    #asd{position:absolute;right:20vw;font-family:Arial;font-size:3rem;text-align:center}
+    #asd span{display:block}
+    audio{margin: 0 0 3rem;}
+    .site-header{min-height:80px;background:#313447}
+    .nav{min-height:64px}
+    .container{padding:1.5em;margin-left:auto;margin-right:auto;max-width:800px;font-weight:400}
+    .logo{float:left;margin:0 0 1em;cursor:pointer;letter-spacing:.8px;font-size:18px;line-height:28px;font-weight:300;display:flex;align-items:center}
+    .logo a{color:#fff}
+    .logo img{height:50px;margin:0 .4rem 0 0}
+    .navbar{float:right;margin:12px 0 0;position:relative;padding:0;pointer-events:all;cursor:pointer}
+    .navbar li{display:inline-block;padding:0 .6em}
+    .navbar a{color:#fff;padding-bottom: .05em;font-family:"Source Code Pro", monospace;text-decoration:none;}
+    .navbar a:hover{border-bottom:2px solid #9f60d6;}
+    </style>
+</head>
+<body>
+  <header class="site-header"> <nav class="nav"> <div class="container"> <h1 class="logo"> <a href="/"> <img src="/-res/img/splotlight.svg" alt="JS"> </a> <a href="/"> <!-- <span>Cooks</span> --> </a> </h1> <ul class="navbar"> <li><a href="/courses">Courses</a></li> <li><a href="/about">About</a></li> </ul> </div> </nav> </header>
+    <div id="tetris">
+      <div id="score"></div>
+      <div id="next"></div>
+      <div id="asd">
+        <audio tabindex="0" id="beep-one" autoplay controls preload="auto" >
+          <source src="tetris.mp3">
+        </audio>
+        <span>&uarr;: rotate</span>
+        <span>&rarr;: move right</span>
+        <span>&larr;: move left</span>
+        <span>&darr;: drop</span>
+        <span>P: &#10074;&#10074; game</span>
+        <span>S: &#10074;&#10074; &#9658; music</span>
+        <span>space: cheater</span>
+      </div>
+
+      <canvas id="tetrisMap" width="360" height="570" />
+    </div>
+    <script type="module" src="tetris.js"></script>
+</body>
+</html>
